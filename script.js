@@ -39,7 +39,7 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
-
+// Imar Mendes - Turma 19 - Tribo A, me ajudou a arrumar os problemas como Lint.
 const getProduct = async (product) => {
   const { results } = await fetchProducts(product);
   results.forEach((item) => {
