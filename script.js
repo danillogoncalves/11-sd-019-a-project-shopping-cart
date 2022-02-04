@@ -1,6 +1,16 @@
 const ButtonEmptyCart = document.querySelector('.empty-cart');
 const cartItemsClass = '.cart__items';
 const totalPriceClass = '.total-price';
+const spanLoading = document.createElement('span');
+
+const createLoadding = () => {
+  const sectionItens = document.querySelector('.items');
+  spanLoading.classList.add('loading');
+  spanLoading.innerHTML = 'carregando...';
+  sectionItens.appendChild(spanLoading);
+};
+
+createLoadding();
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -66,9 +76,11 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
+
 // Imar Mendes - Turma 19 - Tribo A, me ajudou a arrumar os problemas como Lint.
 const getProduct = async (product) => {
   const { results } = await fetchProducts(product);
+  document.querySelectorAll('.loading').forEach((e) => e.remove());
   results.forEach((item) => {
     const { id, title, thumbnail } = item;
     const sectionItens = document.querySelector('.items');
