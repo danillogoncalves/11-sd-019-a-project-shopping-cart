@@ -1,4 +1,5 @@
 const cartItemsClass = '.cart__items';
+const totalPriceClass = '.total-price';
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -30,11 +31,31 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-function cartItemClickListener(event) {
+const getPrice = async () => {
+  const liCartItem = [...document.querySelectorAll('.cart__item')];
+  let total = 0;
+  await Promise.all(liCartItem.map(async (item) => {
+    const id = item.innerHTML.split(' ')[1];
+    const { price } = await fetchItem(id);
+    total += price;
+  }));
+  return +total.toFixed(2);
+};
+
+const createSubtotal = async () => {
+  const span = document.createElement('span');
+  span.classList.add('subtotal');
+  span.innerHTML = await getPrice();
+  document.querySelector(totalPriceClass).appendChild(span);
+};
+
+async function cartItemClickListener(event) {
   // coloque seu código aqui
   const olShowItems = document.querySelector(cartItemsClass);
   event.target.remove();
   saveCartItems(olShowItems.innerHTML);
+  document.querySelector(totalPriceClass).innerHTML = '';
+  await createSubtotal();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -64,6 +85,8 @@ const getItem = async (event) => {
   const olShowItems = document.querySelector(cartItemsClass);
   olShowItems.appendChild(createShowItems);
   saveCartItems(olShowItems.innerHTML);
+  document.querySelector(totalPriceClass).innerHTML = '';
+  await createSubtotal();
 };
 
 window.onload = async () => {
@@ -74,4 +97,5 @@ window.onload = async () => {
   const cartItem = document.querySelectorAll('.cart__item');
   cartItem.forEach((item) => item.addEventListener('click', cartItemClickListener));
   buttonAdd.forEach((add) => add.addEventListener('click', getItem));
+  await createSubtotal();
 };
