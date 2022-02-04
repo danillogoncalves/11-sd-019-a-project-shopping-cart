@@ -1,3 +1,4 @@
+const ButtonEmptyCart = document.querySelector('.empty-cart');
 const cartItemsClass = '.cart__items';
 const totalPriceClass = '.total-price';
 
@@ -88,6 +89,17 @@ const getItem = async (event) => {
   document.querySelector(totalPriceClass).innerHTML = '';
   await createSubtotal();
 };
+
+const emptyCart = async () => {
+  console.log('oi');
+  const olShowItems = document.querySelector(cartItemsClass);
+  olShowItems.innerHTML = '';
+  saveCartItems(olShowItems.innerHTML);
+  document.querySelector(totalPriceClass).innerHTML = '';
+  await createSubtotal();
+};
+
+ButtonEmptyCart.addEventListener('click', emptyCart);
 
 window.onload = async () => {
   const olShowItems = document.querySelector(cartItemsClass);
